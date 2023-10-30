@@ -6,37 +6,35 @@ from models.state import State
 from flask import jsonify, abort, make_response, request
 
 
-@app_views.route('/states', methods=['GET'], strict_slashes=False)
-def get_states():
-    """
-    Retrieves the list of all State objects
-    """
-    all_states = storage.all(State).values()
-    list_states = []
-    for state in all_states:
-        list_states.append(state.to_dict())
-    return jsonify(list_states)
+@app_views.route("/states", methods=["GET"])
+@app_views.route("/states/<state_id>", methods=["GET"])
+def get_states(state_id=None):
+    """Retrieves a list of all State objects"""
+    if state_id is not None:
+        state = storage.get(State, state_id)
+        if state:
+            return jsonify(state.to_dict())
+        abort(404)
+    states = [state.to_dict() for state in storage.all(State).values()]
+    return jsonify(states)
 
 
-@app_views.route('/states/<state_id>', methods=['GET'], strict_slashes=False)
-def get_state(state_id):
-    """ Retrieves a specific State """
+@app_views.route('/states/<state_id>', methods=['DELETE'],
+                 strict_slashes=False)
+def delete_state(state_id):
+    """
+    Deletes a State Object
+    """
+
     state = storage.get(State, state_id)
+
     if not state:
         abort(404)
 
-    return jsonify(state.to_dict())
+    storage.delete(state)
+    storage.save()
 
-
-@app_views.route("/states/<state_id>", methods=["DELETE"])
-def delete_state(state_id):
-    """Delete state with specified state id"""
-    state = storage.get(State, state_id)
-    if state:
-        storage.delete(state)
-        storage.save()
-        return make_response(jsonify(dict()), 200)
-    abort(404)
+    return make_response(jsonify({}), 200)
 
 
 @app_views.route("/states", methods=["POST"])

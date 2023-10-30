@@ -6,13 +6,13 @@ from models.engine.db_storage import classes
 from models import storage
 
 
-@app_views.route("/status", methods=["GET"])
+@app_views.route("/status", methods=["GET"], strict_slashes=False)
 def status():
     """Returns an OK status"""
     return jsonify({"status": "OK"})
 
 
-@app_views.route("/stats", methods=["GET"])
+@app_views.route("/stats", methods=["GET"], strict_slashes=False)
 def stats():
     summary = {name: storage.count(cls) for name, cls in classes.items()}
     return jsonify(summary)

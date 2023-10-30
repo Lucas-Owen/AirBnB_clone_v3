@@ -61,3 +61,4 @@ def put_state(state_id):
                 setattr(state, key, data[key])
         storage.save()
         return make_response(jsonify(state.to_dict()), 200)
+    abort(404)

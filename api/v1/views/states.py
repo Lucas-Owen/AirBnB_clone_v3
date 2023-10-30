@@ -6,17 +6,26 @@ from models.state import State
 from flask import jsonify, abort, make_response, request
 
 
-@app_views.route("/states", methods=["GET"])
-@app_views.route("/states/<state_id>", methods=["GET"])
-def get_states(state_id=None):
-    """Retrieves a list of all State objects"""
-    if state_id is not None:
-        state = storage.get(State, state_id)
-        if state:
-            return jsonify(state.to_dict())
+@app_views.route('/states', methods=['GET'], strict_slashes=False)
+def get_states():
+    """
+    Retrieves the list of all State objects
+    """
+    all_states = storage.all(State).values()
+    list_states = []
+    for state in all_states:
+        list_states.append(state.to_dict())
+    return jsonify(list_states)
+
+
+@app_views.route('/states/<state_id>', methods=['GET'], strict_slashes=False)
+def get_state(state_id):
+    """ Retrieves a specific State """
+    state = storage.get(State, state_id)
+    if not state:
         abort(404)
-    states = [state.to_dict() for state in storage.all(State).values()]
-    return jsonify(states)
+
+    return jsonify(state.to_dict())
 
 
 @app_views.route("/states/<state_id>", methods=["DELETE"])

@@ -73,7 +73,7 @@ class FileStorage:
         """Returns the object based on class and id"""
         if type(cls) is not type:
             return None
-        obj_id = f'{cls.__name__}.{id}'
+        obj_id = cls.__name__ + '.' + id
         return self.__objects.get(obj_id, None)
 
     def count(self, cls=None):

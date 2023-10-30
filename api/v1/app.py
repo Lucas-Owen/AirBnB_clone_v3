@@ -8,7 +8,7 @@ import os
 
 app = Flask(__name__)
 app.register_blueprint(app_views)
-CORS(app, origins="0.0.0.0")
+CORS(app, resources={'/*': {'origins': '0.0.0.0'}})
 
 
 @app.teardown_appcontext
@@ -30,4 +30,4 @@ if __name__ == "__main__":
     port = os.getenv('HBNB_API_PORT')
     if port is None:
         port = '5000'
-    app.run(host=host, port=port)
+    app.run(host=host, port=port, threaded=True)

@@ -8,7 +8,7 @@ from flask import jsonify, abort, make_response
 
 
 @app_views.route("/places/<place_id>/amenities", methods=["GET"])
-def get_places(place_id):
+def get_place_amenities(place_id):
     """Retrieves a list of all Amenities objects in Place"""
     place = storage.get(Place, place_id)
     if place:
@@ -25,7 +25,7 @@ def get_places(place_id):
 
 @app_views.route("/places/<place_id>/amenities/<amenity_id>",
                  methods=["DELETE"])
-def delete_place(place_id, amenity_id):
+def delete_place_amenities(place_id, amenity_id):
     """Delete amenity in place with specified place id"""
     place = storage.get(Place, place_id)
     if place:
@@ -45,7 +45,7 @@ def delete_place(place_id, amenity_id):
 
 
 @app_views.route("/places/<place_id>/amenities/<amenity_id>", methods=["POST"])
-def post_place(place_id, amenity_id):
+def post_place_amenities(place_id, amenity_id):
     """Link an Amenity to a place"""
     place = storage.get(Place, place_id)
     if place:
